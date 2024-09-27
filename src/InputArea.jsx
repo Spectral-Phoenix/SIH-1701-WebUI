@@ -115,88 +115,92 @@ const InputArea = ({ isDarkMode, onSubmit }) => {
             )}
           </span>
         </div>
-        {/* Bottom section: File drop area */}
-        <div
-          onDragEnter={handleDragEnter}
-          onDragOver={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-          className={`p-4 flex flex-col items-center justify-center rounded-b-lg transition-all duration-300 ${
-            isDarkMode ? "bg-gray-900" : "bg-gray-50"
-          } ${isDragging ? "border-2 border-dashed border-blue-500 bg-opacity-50" : ""}`}
-        >
-          <input
-            type="file"
-            id="fileInput"
-            multiple
-            onChange={handleFileInputChange}
-            className="hidden"
-          />
-          {uploadedFiles.length > 0 ? (
-            <div className="w-full max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
-              <div className="flex flex-wrap gap-4">
-                <AnimatePresence> {/* Use AnimatePresence for exit animations */}
-                  {uploadedFiles.map((file, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.8 }}
-                      className={`flex items-center ${
-                        isDarkMode ? "bg-gray-800" : "bg-gray-200"
-                      } rounded-md p-3 relative group`}
-                    >
-                      {getFilePreview(file) ? (
-                        <img
-                          src={getFilePreview(file)}
-                          alt={file.name}
-                          className="w-12 h-12 object-cover rounded-md mr-3"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 flex items-center justify-center rounded-md mr-3 bg-gray-300">
-                          {getFileIcon(file)}
-                        </div>
-                      )}
-                      <div>
-                        <span className="text-sm font-medium truncate max-w-[150px] block">
-                          {file.name}
-                        </span>
-                        <span className="text-xs text-gray-500">
-                          {(file.size / 1024).toFixed(2)} KB
-                        </span>
-                      </div>
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => removeFile(index)}
-                        className={`absolute top-1 right-1 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity ${
-                          isDarkMode
-                            ? "bg-gray-700 hover:bg-gray-600"
-                            : "bg-gray-300 hover:bg-gray-400"
-                        }`}
+        {/* Bottom section: File drop area (Floating Panel) */}
+        <div className="p-4">
+          <div
+            onDragEnter={handleDragEnter}
+            onDragOver={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+            className={`p-4 flex flex-col items-center justify-center rounded-lg transition-all duration-300 
+              ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}
+              ${isDragging ? "border-2 border-dashed border-blue-500 bg-opacity-50" : "border border-dashed"}
+              ${isDarkMode ? "border-gray-600" : "border-gray-300"}
+              shadow-md hover:shadow-lg`}
+          >
+            <input
+              type="file"
+              id="fileInput"
+              multiple
+              onChange={handleFileInputChange}
+              className="hidden"
+            />
+            {uploadedFiles.length > 0 ? (
+              <div className="w-full max-h-60 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-gray-400 hover:scrollbar-thumb-gray-500">
+                <div className="flex flex-wrap gap-4">
+                  <AnimatePresence>
+                    {uploadedFiles.map((file, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        className={`flex items-center ${
+                          isDarkMode ? "bg-gray-800" : "bg-gray-200"
+                        } rounded-md p-3 relative group`}
                       >
-                        <X size={14} />
-                      </motion.button>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
+                        {getFilePreview(file) ? (
+                          <img
+                            src={getFilePreview(file)}
+                            alt={file.name}
+                            className="w-12 h-12 object-cover rounded-md mr-3"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 flex items-center justify-center rounded-md mr-3 bg-gray-300">
+                            {getFileIcon(file)}
+                          </div>
+                        )}
+                        <div>
+                          <span className="text-sm font-medium truncate max-w-[150px] block">
+                            {file.name}
+                          </span>
+                          <span className="text-xs text-gray-500">
+                            {(file.size / 1024).toFixed(2)} KB
+                          </span>
+                        </div>
+                        <motion.button
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                          onClick={() => removeFile(index)}
+                          className={`absolute top-1 right-1 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity ${
+                            isDarkMode
+                              ? "bg-gray-700 hover:bg-gray-600"
+                              : "bg-gray-300 hover:bg-gray-400"
+                          }`}
+                        >
+                          <X size={14} />
+                        </motion.button>
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </div>
               </div>
-            </div>
-          ) : (
-            <motion.label
-              htmlFor="fileInput"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className={`flex flex-col items-center justify-center cursor-pointer h-32 ${
-                isDarkMode ? "text-gray-400" : "text-gray-500"
-              }`}
-            >
-              <Upload className="w-8 h-8 mb-2" />
-              <p className="text-sm text-center">
-                Drop any files related to the case here or click to upload
-              </p>
-            </motion.label>
-          )}
+            ) : (
+              <motion.label
+                htmlFor="fileInput"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className={`flex flex-col items-center justify-center cursor-pointer h-32 ${
+                  isDarkMode ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                <Upload className="w-8 h-8 mb-2" />
+                <p className="text-sm text-center">
+                  Drop any files related to the case here or click to upload
+                </p>
+              </motion.label>
+            )}
+          </div>
         </div>
       </motion.form>
     </div>

@@ -3,7 +3,6 @@ import { Plus, Library, Flag, User } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Sidebar = ({ isDarkMode, toggleProfilePopup, showProfilePopup }) => {
-  // Array of icons with their respective tooltips
   const icons = [
     { Icon: Plus, tooltip: "New" },
     { Icon: Library, tooltip: "Library" },
@@ -12,11 +11,11 @@ const Sidebar = ({ isDarkMode, toggleProfilePopup, showProfilePopup }) => {
 
   return (
     <aside
-      className={`w-16 border-r ${
+      className={`w-16 border-r flex flex-col ${
         isDarkMode ? "border-gray-700 bg-gray-900" : "border-gray-200 bg-gray-50"
-      } flex flex-col py-6 relative`} // Removed justify-between
+      } h-full fixed top-12 left-0 z-40`} 
     >
-      <div className="space-y-6 flex flex-col items-center">
+      <div className="space-y-6 flex flex-col items-center py-6">
         {icons.map(({ Icon, tooltip }, index) => (
           <motion.button
             key={index}
@@ -29,15 +28,15 @@ const Sidebar = ({ isDarkMode, toggleProfilePopup, showProfilePopup }) => {
             }`}
           >
             <Icon size={24} />
-            {/* Centered tooltip - Now relative to the button */}
             <span className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap top-1/2 -translate-y-1/2 pointer-events-none"> 
               {tooltip}
             </span>
           </motion.button>
         ))}
       </div>
-    
-      <div className="absolute bottom-6 left-0 w-full flex flex-col items-center"> 
+      
+      {/* Profile icon */}
+      <div className="absolute bottom-12 flex flex-col items-center left-0 w-full p-3"> 
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -54,8 +53,8 @@ const Sidebar = ({ isDarkMode, toggleProfilePopup, showProfilePopup }) => {
           </span>
         </motion.button>
       </div>
-    </aside>
-  );
-};
+      </aside>
+      );
+      };
 
-export default Sidebar;
+      export default Sidebar;

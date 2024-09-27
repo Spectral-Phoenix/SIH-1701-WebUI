@@ -67,7 +67,7 @@ const Workspace = () => {
       <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
         <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
           <Header isDarkMode={isDarkMode} />
-          <main className="flex-grow flex overflow-hidden">
+          <main className="flex-grow flex overflow-hidden mt-12"> 
             <SignedIn>
               <Sidebar isDarkMode={isDarkMode} toggleProfilePopup={toggleProfilePopup} />
               <AnimatePresence mode='wait'>
@@ -81,13 +81,23 @@ const Workspace = () => {
               <SignOutContent />
             </SignedOut>
           </main>
+
+          {/* Footer Links */}
           <SignedIn>
-            <Footer
-              isDarkMode={isDarkMode}
-              openFooterPopup={openFooterPopup}
-              toggleProfilePopup={toggleProfilePopup}
-            />
+            <div className={`mt-auto p-2 text-center text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+              {["FAQ", "Terms", "AI Policy", "Privacy", "Insight AI →"].map((link) => (
+                <a
+                  key={link}
+                  href="#"
+                  className={`mx-2 hover:underline cursor-pointer ${isDarkMode ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"}`}
+                  onClick={() => openFooterPopup(link)}
+                >
+                  {link}
+                </a>
+              ))}
+            </div>
           </SignedIn>
+
           {showProfilePopup && (
             <div ref={profilePopupRef}>
               <ProfilePopup
@@ -116,7 +126,7 @@ const Workspace = () => {
 };
 
 const Header = React.memo(({ isDarkMode }) => (
-  <header className={`flex justify-between items-center px-4 py-2 border-b ${isDarkMode ? "border-gray-700" : "border-gray-200"}`}>
+  <header className={`flex justify-between items-center px-4 py-2 border-b fixed top-0 left-0 right-0 z-50 ${isDarkMode ? "border-gray-700 bg-gray-900" : "border-gray-200 bg-white"}`}>
     <div className="text-2xl font-semibold">Insight AI</div>
     <div className={`text-sm px-2 py-1 rounded-full ${isDarkMode ? "bg-blue-900 text-blue-200" : "bg-blue-100 text-blue-800"}`}>
       Smart India Hackathon(SIH)-PS ID: 1701
@@ -161,40 +171,6 @@ const HomePage = React.memo(({ isDarkMode }) => {
   );
 });
 
-const Footer = React.memo(({ isDarkMode, openFooterPopup, toggleProfilePopup }) => {
-  const location = useLocation();
-
-  if (location.pathname !== "/") return null;
-
-  return (
-    <footer className={`border-t p-1 flex justify-between items-center ${isDarkMode ? "border-gray-700" : "border-gray-200"}`}>
-      <div className="flex-grow"></div>
-      <div className={`flex space-x-4 text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-        {["FAQ", "Terms", "AI Policy", "Privacy", "Insight AI →"].map((link) => (
-          <a
-            key={link}
-            href="#"
-            className="hover:underline cursor-pointer"
-            onClick={() => openFooterPopup(link)}
-          >
-            {link}
-          </a>
-        ))}
-      </div>
-      <div className="flex-grow"></div>
-      <motion.button
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
-        className={`p-2 rounded-full transition-colors duration-200 ${
-          isDarkMode ? "hover:bg-gray-800 text-gray-400" : "hover:bg-gray-100 text-gray-600"
-        }`}
-        onClick={toggleProfilePopup}
-      >
-        <HelpCircle size={20} />
-      </motion.button>
-    </footer>
-  );
-});
 
 const SignOutContent = () => (
   <div className="flex-grow p-8 flex flex-col items-center justify-center">

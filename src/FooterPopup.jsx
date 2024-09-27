@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
 const FooterPopup = ({ isDarkMode, title, onClose, children }) => {
-  // Define classes for light and dark modes
   const classes = {
     container: `fixed inset-0 flex items-center justify-center z-50 ${
       isDarkMode ? "bg-black/50" : "bg-white/50"
@@ -24,7 +23,7 @@ const FooterPopup = ({ isDarkMode, title, onClose, children }) => {
 
   const handleClose = () => {
     setIsOpen(false);
-    setTimeout(onClose, 300); // Wait for animation to complete
+    setTimeout(onClose, 300);
   };
 
   const handleClickOutside = (event) => {
