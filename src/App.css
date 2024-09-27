@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Atkinson Hyperlegible';
+  src: url('public/fonts/Atkinson-Hyperlegible-Regular-102a.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('public/fonts/InterVariable.woff2') format('woff2');
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
