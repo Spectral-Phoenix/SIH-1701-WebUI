@@ -16,13 +16,14 @@ import { motion, AnimatePresence } from "framer-motion";
 import ConversationPage from "./ConversationPage";
 import { ClerkProvider, SignedIn, SignedOut, SignInButton, SignUpButton } from '@clerk/clerk-react';
 
-const Workspace = () => {
+const WorkspaceContent = () => {
   const [isDarkMode, setIsDarkMode] = useState(() => localStorage.getItem("theme") === "dark");
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [showFooterPopup, setShowFooterPopup] = useState(false);
   const [footerPopupContent, setFooterPopupContent] = useState("");
   const profilePopupRef = useRef(null);
   const footerPopupRef = useRef(null);
+  const location = useLocation();
 
   const toggleProfilePopup = useCallback(() => {
     setShowProfilePopup((prevState) => !prevState);
@@ -62,64 +63,74 @@ const Workspace = () => {
     };
   }, []);
 
+  const isHomePage = location.pathname === '/';
+
+  return (
+    <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
+      <Header isDarkMode={isDarkMode} />
+      <main className="flex-grow flex overflow-hidden mt-12"> 
+        <SignedIn>
+          <Sidebar isDarkMode={isDarkMode} toggleProfilePopup={toggleProfilePopup} />
+          <AnimatePresence mode='wait'>
+            <Routes>
+              <Route path="/" element={<HomePage isDarkMode={isDarkMode} />} />
+              <Route path="/conversation/:id" element={<ConversationPage isDarkMode={isDarkMode} />} />
+            </Routes>
+          </AnimatePresence>
+        </SignedIn>
+        <SignedOut>
+          <SignOutContent />
+        </SignedOut>
+      </main>
+
+      {/* Footer Links */}
+      <SignedIn>
+        {isHomePage && (
+          <div className={`mt-auto p-2 text-center text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
+            {["FAQ", "Terms", "AI Policy", "Privacy", "Insight AI →"].map((link) => (
+              <a
+                key={link}
+                href="#"
+                className={`mx-2 hover:underline cursor-pointer ${isDarkMode ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"}`}
+                onClick={() => openFooterPopup(link)}
+              >
+                {link}
+              </a>
+            ))}
+          </div>
+        )}
+      </SignedIn>
+
+      {showProfilePopup && (
+        <div ref={profilePopupRef}>
+          <ProfilePopup
+            isDarkMode={isDarkMode}
+            toggleDarkMode={toggleDarkMode}
+            toggleProfilePopup={toggleProfilePopup}
+            showProfilePopup={showProfilePopup}
+          />
+        </div>
+      )}
+      {showFooterPopup && (
+        <div ref={footerPopupRef}>
+          <FooterPopup
+            isDarkMode={isDarkMode}
+            title={footerPopupContent}
+            onClose={closeFooterPopup}
+          >
+            <p>This is the content for the {footerPopupContent} popup. More detailed information will be added here soon.</p>
+          </FooterPopup>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Workspace = () => {
   return (
     <Router>
       <ClerkProvider publishableKey={import.meta.env.VITE_CLERK_PUBLISHABLE_KEY}>
-        <div className={`flex flex-col h-screen transition-colors duration-300 ${isDarkMode ? "bg-gray-900 text-white" : "bg-white text-gray-800"}`}>
-          <Header isDarkMode={isDarkMode} />
-          <main className="flex-grow flex overflow-hidden mt-12"> 
-            <SignedIn>
-              <Sidebar isDarkMode={isDarkMode} toggleProfilePopup={toggleProfilePopup} />
-              <AnimatePresence mode='wait'>
-                <Routes>
-                  <Route path="/" element={<HomePage isDarkMode={isDarkMode} />} />
-                  <Route path="/conversation/:id" element={<ConversationPage isDarkMode={isDarkMode} />} />
-                </Routes>
-              </AnimatePresence>
-            </SignedIn>
-            <SignedOut>
-              <SignOutContent />
-            </SignedOut>
-          </main>
-
-          {/* Footer Links */}
-          <SignedIn>
-            <div className={`mt-auto p-2 text-center text-sm ${isDarkMode ? "text-gray-400" : "text-gray-600"}`}>
-              {["FAQ", "Terms", "AI Policy", "Privacy", "Insight AI →"].map((link) => (
-                <a
-                  key={link}
-                  href="#"
-                  className={`mx-2 hover:underline cursor-pointer ${isDarkMode ? "text-gray-400 hover:text-gray-200" : "text-gray-600 hover:text-gray-800"}`}
-                  onClick={() => openFooterPopup(link)}
-                >
-                  {link}
-                </a>
-              ))}
-            </div>
-          </SignedIn>
-
-          {showProfilePopup && (
-            <div ref={profilePopupRef}>
-              <ProfilePopup
-                isDarkMode={isDarkMode}
-                toggleDarkMode={toggleDarkMode}
-                toggleProfilePopup={toggleProfilePopup}
-                showProfilePopup={showProfilePopup}
-              />
-            </div>
-          )}
-          {showFooterPopup && (
-            <div ref={footerPopupRef}>
-              <FooterPopup
-                isDarkMode={isDarkMode}
-                title={footerPopupContent}
-                onClose={closeFooterPopup}
-              >
-                <p>This is the content for the {footerPopupContent} popup. More detailed information will be added here soon.</p>
-              </FooterPopup>
-            </div>
-          )}
-        </div>
+        <WorkspaceContent />
       </ClerkProvider>
     </Router>
   );
@@ -170,7 +181,6 @@ const HomePage = React.memo(({ isDarkMode }) => {
     </motion.div>
   );
 });
-
 
 const SignOutContent = () => (
   <div className="flex-grow p-8 flex flex-col items-center justify-center">

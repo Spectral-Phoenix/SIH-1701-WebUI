@@ -61,7 +61,7 @@ const ConversationPage = ({ isDarkMode, transition }) => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={transition}
-      className={`flex flex-col min-h-screen p-8 relative transition-colors duration-300 ${
+      className={`flex flex-col min-h-screen p-8 pl-24 relative transition-colors duration-300 ${
         isDarkMode ? "bg-gray-900 text-gray-100" : "bg-white text-gray-800"
       }`}
     >
@@ -77,7 +77,7 @@ const ConversationPage = ({ isDarkMode, transition }) => {
 
       {/* Conversation Area */}
       <motion.div
-        className="w-full max-w-3xl mx-auto fixed inset-x-0 bottom-0 z-20 flex justify-center"
+        className="w-full max-w-3xl mx-auto fixed inset-x-0 bottom-0 z-50 flex justify-center"
         initial="closed"
         animate={isChatExpanded ? "open" : "closed"}
         variants={chatVariants}
@@ -196,7 +196,7 @@ const ConversationPage = ({ isDarkMode, transition }) => {
         </motion.div>
       </motion.div>
 
-      {/* Background Blur */}
+      {/* Full-screen Background Blur */}
       <AnimatePresence>
         {isChatExpanded && (
           <motion.div
@@ -204,14 +204,13 @@ const ConversationPage = ({ isDarkMode, transition }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-10"
+            className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm z-40"
             onClick={() => setIsChatExpanded(false)}
             aria-hidden="true"
           />
         )}
       </AnimatePresence>
-    </motion.div>
-  );
-};
-
+      </motion.div>
+      );
+      };
 export default ConversationPage;

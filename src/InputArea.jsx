@@ -171,7 +171,10 @@ const InputArea = ({ isDarkMode, onSubmit }) => {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          onClick={() => removeFile(index)}
+                          onClick={(e) => { 
+                            e.preventDefault(); // Prevent form submission
+                            removeFile(index);
+                          }}
                           className={`absolute top-1 right-1 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity ${
                             isDarkMode
                               ? "bg-gray-700 hover:bg-gray-600"
